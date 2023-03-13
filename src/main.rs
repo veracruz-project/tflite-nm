@@ -79,10 +79,7 @@ impl TfLiteInferenceService {
         let mut interpreter = builder.build()?;
 
         // Configure interpreter
-        // XXX: This function call is commented out as it results in a write to
-        // stdout, which currently fails on Linux (cf.
-        // https://github.com/veracruz-project/veracruz/issues/565)
-        //interpreter.set_num_threads(*num_threads);
+        interpreter.set_num_threads(*num_threads);
 
         interpreter.allocate_tensors()?;
 
