@@ -106,7 +106,6 @@ impl TfLiteInferenceService {
         println!("writing results...");
         let mut file = File::create(Path::new("/").join(output_tensor_path))?;
         file.write_all(&output.to_vec())?;
-        println!("done");
 
         Ok(())
     }
@@ -114,19 +113,15 @@ impl TfLiteInferenceService {
 
 fn main() -> anyhow::Result<()>
 {
-    println!("{:?}", SystemTime::now().duration_since(UNIX_EPOCH)? * 1000000);
     let mut service = TfLiteInferenceService::new();
 
-    // Read input from special file
-    println!("opening special file...");
-    let mut f = File::open("/services/tflite_inference.dat")?;
-    println!("done");
-    let mut input = [0; 1024];
-    println!("reading special file...");
-    f.read(&mut input)?;
-    println!("done");
+    // Read input from execution configuration file
+    println!("opening execution configuration file...");
+    let mut f = File::open("/execution_config")?;
+    let mut input = Vec::new();
+    println!("reading execution configuration file...");
+    f.read_to_end(&mut input)?;
     println!("parsing input...");
     service.try_parse(&input)?;
-    println!("done");
     service.infer()
 }
